@@ -22,7 +22,7 @@ namespace UpsQVResponseLib
     {
         public string TransactionReference { get; set; }
         public string ResponseStatusCode { get; set; }
-        public string ResponseStatusDescription { get; set; }
+        public string ResponseStatusDescription { get; set; } 
         public Error Error { get; set; }
     }
 
@@ -101,8 +101,8 @@ namespace UpsQVResponseLib
         public string Date { get; set; }
         public string Time { get; set; }
         public ActivityLocation ActivityLocation { get; set; }
-        public List<PackageReferenceNumber> PackageReferenceNumber { get; set; }
-        public List<ShipmentReferenceNumber> ShipmentReferenceNumber { get; set; }
+        public PackageReferenceNumber PackageReferenceNumber { get; set; }
+        public PackageReferenceNumber ShipmentReferenceNumber { get; set; }
         public BillToAccount BillToAccount { get; set; }
         public string ScheduledDeliveryDate { get; set; }
         public string ScheduledDeliveryTime { get; set; }
@@ -129,8 +129,8 @@ namespace UpsQVResponseLib
 
     public class Delivery
     {
-        public List<PackageReferenceNumber> PackageReferenceNumber { get; set; }
-        public List<ShipmentReferenceNumber> ShipmentReferenceNumber { get; set; }
+        public PackageReferenceNumber PackageReferenceNumber { get; set; }
+        public ShipmentReferenceNumber ShipmentReferenceNumber { get; set; }
         public string ShipperNumber { get; set; }
         public string TrackingNumber { get; set; }
         public string Date { get; set; }
@@ -371,7 +371,7 @@ namespace UpsQVResponseLib
 
     public class Exception
     {
-        public List<PackageReferenceNumber> PackageReferenceNumber { get; set; }
+        public PackageReferenceNumber PackageReferenceNumber { get; set; }
         public string ShipperNumber { get; set; }
         public string TrackingNumber { get; set; }
         public string Date { get; set; }
@@ -420,7 +420,7 @@ namespace UpsQVResponseLib
         public List<Manifest> Manifest { get; set; }
         public Origin Origin { get; set; }
         public Exception Exception { get; set; }
-        public List<Delivery> Delivery { get; set; }
+        public Delivery Delivery { get; set; }
         public Generic Generic { get; set; }
     }
 
@@ -430,25 +430,26 @@ namespace UpsQVResponseLib
         public string EndDate { get; set; }
     }
 
-    public class SubscriptionEvent
+    public class SubscriptionEvents
     {
         public string Name { get; set; }
         public string Number { get; set; }
-        public SubscriptionStatus SubscriptionStatus { get; set; }
         public DateRange DateRange { get; set; }
+        public SubscriptionStatus SubscriptionStatus { get; set; }
         public List<SubscriptionFile> SubscriptionFile { get; set; }
     }
 
     public class QuantumViewEvents
     {
         public string SubscriberID { get; set; }
-        public List<SubscriptionEvent> SubscriptionEvents { get; set; }
+        public SubscriptionEvents SubscriptionEvents { get; set; }
     }
 
     public class QuantumViewResponse
     {
         public Response Response { get; set; }
         public QuantumViewEvents QuantumViewEvents { get; set; }
+        public string Bookmark { get; set; }
     }
 
     public class QvRoot

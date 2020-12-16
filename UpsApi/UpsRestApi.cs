@@ -9,7 +9,7 @@ namespace UpsRestApi
 {
     public class UpsApi
     {
-        public static QvRoot GetQuantumView(string url)
+        public static QvRoot GetQuantumView(string username, string password, string key, string url)
         {
             try
             {
@@ -20,24 +20,25 @@ namespace UpsRestApi
                 {
                     AccessRequest = new AccessRequestClass()
                     {
-                        AccessLicenseNumber = "6D8E7C615F055692",
-                        UserId = "RegaloRxIT",
-                        Password = "R3g@L0rx$$"
+                        AccessLicenseNumber = key,
+                        UserId = username,
+                        Password = password
                     },
                     QuantumViewRequest = new QuantumViewRequestClass()
                     {
                         Request = new RequestClass()
                         {
-                           RequestAction = "QVEvents"
+                            RequestAction = "QVEvents"
                         },
                         SubscriptionRequest = new SubscriptionRequestClass()
                         {
                             Name = "RegaloRXOutbound",
-                            //DateTimeRange = new SubscriptionRequestDateTimeRangeClass()
-                            //{
-                            //    BeginDateTime = "20201201000000",
-                            //    EndDateTime = "20201207000000"
-                            //},
+                            //FileName = "201210_170001001"
+                            DateTimeRange = new SubscriptionRequestDateTimeRangeClass()
+                            {
+                                BeginDateTime = "20201214000000",
+                                EndDateTime = "20201215000000"
+                            }
                         }
                     }
                 };
@@ -75,8 +76,9 @@ namespace UpsRestApi
                 {
                     StreamReader reader = new StreamReader(responseStream, System.Text.Encoding.GetEncoding("utf-8"));
                     String errorText = reader.ReadToEnd();
+                    System.Exception exx = new System.Exception(errorText, ex);
+                    throw exx;
                 }
-                throw;
             } 
         }
     }

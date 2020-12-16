@@ -30,6 +30,7 @@ namespace UpsRequestLib
     {
         public string Name { get; set; }
         public SubscriptionRequestDateTimeRangeClass DateTimeRange { get; set; }
+        public string FileName { get; set; }
     }
 
     public class QuantumViewRequestClass
