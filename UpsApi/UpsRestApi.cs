@@ -32,13 +32,13 @@ namespace UpsRestApi
                         },
                         SubscriptionRequest = new SubscriptionRequestClass()
                         {
-                            Name = "RegaloRXOutbound",
-                            //FileName = "201210_170001001"
-                            DateTimeRange = new SubscriptionRequestDateTimeRangeClass()
-                            {
-                                BeginDateTime = "20201214000000",
-                                EndDateTime = "20201215000000"
-                            }
+                            Name = "RegaloRXOutbound"
+                            //FileName = "201215_060151001"
+                            //DateTimeRange = new SubscriptionRequestDateTimeRangeClass()
+                            //{
+                            //    BeginDateTime = "20201214000000",
+                            //    EndDateTime = "20201215000000"
+                            //}
                         }
                     }
                 };
@@ -61,12 +61,15 @@ namespace UpsRestApi
 
                 // Send the request, get the response
                 HttpWebResponse webResponse = (HttpWebResponse)request.GetResponse();
-                StreamReader sr = new StreamReader(webResponse.GetResponseStream());
-                string responseText = sr.ReadToEnd();
+                StreamReader sReader = new StreamReader(webResponse.GetResponseStream());
+                string responseText = sReader.ReadToEnd();
+                sReader.Close();
+                webResponse.Close();
 
                 // Load response object model
                 QvRoot qvRoot = JsonConvert.DeserializeObject<QvRoot>(responseText);
-
+                
+                
                 return qvRoot;
             }
             catch (WebException ex)
@@ -80,6 +83,24 @@ namespace UpsRestApi
                     throw exx;
                 }
             } 
+        }
+    }
+
+    public class SingleValueArrayConverter : JsonConverter
+    {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return false;
         }
     }
 }

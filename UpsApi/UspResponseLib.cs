@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace UpsQVResponseLib
 {
@@ -59,7 +61,8 @@ namespace UpsQVResponseLib
         public string StreetType { get; set; }
         public string StreetSuffix { get; set; }
         public string BuildingName { get; set; }
-        public List<AddressExtendedInformation> AddressExtendedInformation { get; set; }
+        [JsonConverter(typeof(SingleValueArrayConverter<AddressExtendedInformation>))]
+        public IList<AddressExtendedInformation> AddressExtendedInformation { get; set; }
         public string PoliticalDivision3 { get; set; }
         public string PoliticalDivision2 { get; set; }
         public string PoliticalDivision1 { get; set; }
@@ -355,7 +358,8 @@ namespace UpsQVResponseLib
         public string StreetName { get; set; }
         public string StreetType { get; set; }
         public string StreetSuffix { get; set; }
-        public List<AddressExtendedInformation> AddressExtendedInformation { get; set; }
+        [JsonConverter(typeof(SingleValueArrayConverter<AddressExtendedInformation>))]
+        public IList<AddressExtendedInformation> AddressExtendedInformation { get; set; }
         public string PoliticalDivision3 { get; set; }
         public string PoliticalDivision2 { get; set; }
         public string PoliticalDivision1 { get; set; }
@@ -417,11 +421,16 @@ namespace UpsQVResponseLib
     {
         public string FileName { get; set; }
         public StatusType StatusType { get; set; }
-        public List<Manifest> Manifest { get; set; }
-        public Origin Origin { get; set; }
-        public Exception Exception { get; set; }
-        public Delivery Delivery { get; set; }
-        public Generic Generic { get; set; }
+        [JsonConverter(typeof(SingleValueArrayConverter<Manifest>))]
+        public IList<Manifest> Manifest { get; set; }
+        [JsonConverter(typeof(SingleValueArrayConverter<Origin>))]
+        public IList<Origin> Origin { get; set; }
+        [JsonConverter(typeof(SingleValueArrayConverter<Exception>))]
+        public IList<Exception> Exception { get; set; }
+        [JsonConverter(typeof(SingleValueArrayConverter<Delivery>))]
+        public IList<Delivery> Delivery { get; set; }
+        [JsonConverter(typeof(SingleValueArrayConverter<Generic>))]
+        public IList<Generic> Generic { get; set; }
     }
 
     public class DateRange
@@ -436,6 +445,7 @@ namespace UpsQVResponseLib
         public string Number { get; set; }
         public DateRange DateRange { get; set; }
         public SubscriptionStatus SubscriptionStatus { get; set; }
+        [JsonConverter(typeof(SingleValueArrayConverter<SubscriptionFile>))]
         public List<SubscriptionFile> SubscriptionFile { get; set; }
     }
 
@@ -458,5 +468,31 @@ namespace UpsQVResponseLib
         public string Bookmark { get; set; } 
     }
 
+    public class SingleValueArrayConverter<T> : JsonConverter
+    {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
 
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            object retVal = new Object();
+            if (reader.TokenType == JsonToken.StartObject)
+            {
+                T instance = (T)serializer.Deserialize(reader, typeof(T));
+                retVal = new List<T>() { instance };
+            }
+            else if (reader.TokenType == JsonToken.StartArray)
+            {
+                retVal = serializer.Deserialize(reader, objectType);
+            }
+            return retVal;
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return true;
+        }
+    }
 }
